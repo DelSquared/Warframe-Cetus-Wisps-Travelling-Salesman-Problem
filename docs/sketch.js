@@ -4,6 +4,8 @@ var img; //placeholder variable to store map in
 var popul = 500; //G.A. population of each generation
 var genBest = 100; //number of best specimens chosen per generation
 var population; //variable to later store the population in
+var inputPop1,inputPop10,inputPop100,inputPop1000;
+var inputBest1,inputBest10,inputBest100,inputBest1000;
 
 function Wisp(x,y){ //constructor for a "wisp" object containing x and y coords
   this.x=x;
@@ -15,9 +17,38 @@ function preload(){ //preloading the image in p5.js context
 }
 
 function setup() { //setting up canvas for p5.js to work on
-  createCanvas(w, h); //canvas dimensions
+  var c = createCanvas(w, h); //canvas dimensions
+  c.mouseClicked(addWisp); //limits the event listeners to the canvas
   stroke(255); //line colour for drawing
   len = createDiv(''); //text element to display path length of displayed path
+  popinf = createDiv(''); //controls for increasing population size (be cautious of RAM size)
+  inputPop1 =  createButton('+0001');
+  inputPop1.position(10, h+55);
+  inputPop1.mousePressed(()=>popul+=1);
+  inputPop10 =  createButton('+0010');
+  inputPop10.position(60, h+55);
+  inputPop10.mousePressed(()=>popul+=10);
+  inputPop100 =  createButton('+0100');
+  inputPop100.position(110, h+55);
+  inputPop100.mousePressed(()=>popul+=100);
+  inputPop1000 =  createButton('+1000');
+  inputPop1000.position(160, h+55);
+  inputPop1000.mousePressed(()=>popul+=1000);
+
+
+  bestinf = createDiv(''); //controls for increasing generation best size (be cautious of RAM size)
+  inputBest1 =  createButton('+0001');
+  inputBest1.position(10, h+110);
+  inputBest1.mousePressed(()=>genBest+=1);
+  inputBest10 =  createButton('+0010');
+  inputBest10.position(60, h+110);
+  inputBest10.mousePressed(()=>genBest+=10);
+  inputBest100 =  createButton('+0100');
+  inputBest100.position(110, h+110);
+  inputBest100.mousePressed(()=>genBest+=100);
+  inputBest1000 =  createButton('+1000');
+  inputBest1000.position(160, h+110);
+  inputBest1000.mousePressed(()=>genBest+=1000);
 }
 
 function draw() { //p5.js draw function. This is called once per frame
@@ -33,6 +64,8 @@ function draw() { //p5.js draw function. This is called once per frame
   }
 
   len.html("s<sup>2</sup>: "+dPath(locs)); //setting up the text element
+  popinf.html("Increase population by:");
+  bestinf.html("<br><br>Increase generation best by:");
 
   if (locs.length > 3){
       population = fitnessEval(population,genBest);
@@ -42,7 +75,7 @@ function draw() { //p5.js draw function. This is called once per frame
   }
 }
 
-function mouseClicked() { //telling p5.js what to do when mouse is clicked
+function addWisp() { //telling p5.js what to do when mouse is clicked
   locs.push(new Wisp(mouseX,mouseY)); //pushing new wisps into the "locs" array
   if (locs.length>3){
     population = createPopulation(locs,popul);
